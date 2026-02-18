@@ -1,59 +1,35 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
+import HabitInput from '@/components/HabitInput';
+import HabitList from '@/components/HabitList';
 
 const USER_ID = 'user-1';
 
 export default function Home() {
-    const [habitName, setHabitName] = useState('');
+    const [habits, setHabits] = useLocalStorage<Habit[]>('habits', []);
+    const [logs, setLogs] = useLocalStorage<HabitLog[]>('habit_logs', []);
 
     const today = new Date().toISOString().split('T')[0];
 
-    // Load from localStorage
-    const [habits, setHabits] = useState<Habit[]>(() => {
-        if (typeof window === 'undefined') return [];
-        const stored = localStorage.getItem('habits');
-        return stored ? JSON.parse(stored) : [];
-    });
-
-    const [logs, setLogs] = useState<HabitLog[]>(() => {
-        if (typeof window === 'undefined') return [];
-        const stored = localStorage.getItem('habit_logs');
-        return stored ? JSON.parse(stored) : [];
-    });
-
-    // Persist
-    useEffect(() => {
-        localStorage.setItem('habits', JSON.stringify(habits));
-    }, [habits]);
-
-    useEffect(() => {
-        localStorage.setItem('habit_logs', JSON.stringify(logs));
-    }, [logs]);
-
-    const addHabit = () => {
-        if (!habitName.trim()) return;
-
+    const addHabit = (name: string) => {
         const newHabit: Habit = {
             id: crypto.randomUUID(),
+            name,
             user_id: USER_ID,
-            name: habitName.trim(),
             createdAt: new Date().toISOString(),
+            order: habits.length, // New habit goes to the end of the list
         };
 
         setHabits([...habits, newHabit]);
-        setHabitName('');
     };
 
     const toggleHabit = (habitId: string) => {
         const existingLog = logs.find((log) => log.habit_id === habitId && log.user_id === USER_ID && log.date === today);
 
         if (existingLog) {
-            // Toggle existing
-            const updatedLogs = logs.map((log) => (log.id === existingLog.id ? { ...log, value: !log.value } : log));
-            setLogs(updatedLogs);
+            setLogs(logs.map((log) => (log.id === existingLog.id ? { ...log, value: !log.value } : log)));
         } else {
-            // Create new log
             const newLog: HabitLog = {
                 id: crypto.randomUUID(),
                 habit_id: habitId,
@@ -66,48 +42,38 @@ export default function Home() {
         }
     };
 
-    const isHabitCompletedToday = (habitId: string) => {
+    const deleteHabit = (habitId: string) => {
+        setHabits(habits.filter((habit) => habit.id !== habitId));
+        setLogs(logs.filter((log) => log.habit_id !== habitId));
+    };
+
+    const reorderHabits = (newOrder: Habit[]) => {
+        setHabits(newOrder);
+    };
+
+    const renameHabit = (habitId: string, newName: string) => {
+        console.log('Renaming habit', habitId, 'to', newName);
+        setHabits(habits.map((habit) => (habit.id === habitId ? { ...habit, name: newName } : habit)));
+    };
+
+    const isCompleted = (habitId: string) => {
         return logs.some((log) => log.habit_id === habitId && log.user_id === USER_ID && log.date === today && log.value === true);
     };
 
     return (
         <main style={{ padding: '2rem', maxWidth: 600, margin: '0 auto' }}>
-            <h1>Taze Tracker</h1>
+            <h1 style={{ textAlign: 'center' }}>Habit Tracker</h1>
 
-            {/* Add Habit */}
-            <div style={{ display: 'flex', gap: '8px', marginBottom: '1rem' }}>
-                <input
-                    type="text"
-                    placeholder="Enter a habit..."
-                    value={habitName}
-                    onChange={(e) => setHabitName(e.target.value)}
-                    style={{ flex: 1, padding: '8px' }}
-                />
-                <button onClick={addHabit} style={{ padding: '8px 12px' }}>
-                    Add
-                </button>
-            </div>
+            <HabitInput onAdd={addHabit} />
 
-            {/* Habit List */}
-            <ul style={{ listStyle: 'none', padding: 0 }}>
-                {habits.map((habit) => (
-                    <li
-                        key={habit.id}
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '12px',
-                            marginBottom: '10px',
-                            padding: '8px',
-                            border: '1px solid #ddd',
-                            borderRadius: '6px',
-                        }}
-                    >
-                        <input type="checkbox" checked={isHabitCompletedToday(habit.id)} onChange={() => toggleHabit(habit.id)} />
-                        <span>{habit.name}</span>
-                    </li>
-                ))}
-            </ul>
+            <HabitList
+                habits={habits}
+                isCompleted={isCompleted}
+                onToggle={toggleHabit}
+                onDelete={deleteHabit}
+                onReorder={reorderHabits}
+                onRename={renameHabit}
+            />
         </main>
     );
 }

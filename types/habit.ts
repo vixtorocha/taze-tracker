@@ -3,6 +3,7 @@ type Habit = {
     user_id: string;
     name: string;
     createdAt: string;
+    order: number;
 };
 
 type HabitLog = {
