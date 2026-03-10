@@ -1,9 +1,9 @@
 'use client';
 
 type Props = {
-  checked: boolean;
-  onChange: () => void;
-  color: string;
+  readonly checked: boolean;
+  readonly onChange?: () => void;
+  readonly color: string;
 };
 
 export default function CustomCheckbox({ checked, onChange, color }: Props) {

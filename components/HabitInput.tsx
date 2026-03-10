@@ -4,14 +4,15 @@ import { useState } from 'react';
 import HabitModal from './HabitModal';
 
 type Props = {
-  onAdd: (name: string, color: string) => void;
+  readonly sections: Section[];
+  readonly onAdd: (name: string, color: string, sectionId?: string) => void;
 };
 
-export default function HabitInput({ onAdd }: Props) {
+export default function HabitInput({ sections, onAdd }: Props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleSave = (name: string, color: string) => {
-    onAdd(name, color);
+  const handleSave = (name: string, color: string, sectionId?: string) => {
+    onAdd(name, color, sectionId || undefined);
     setIsModalOpen(false);
   };
 
@@ -56,6 +57,7 @@ export default function HabitInput({ onAdd }: Props) {
         initialColor='#3B82F6'
         onClose={() => setIsModalOpen(false)}
         onSave={handleSave}
+        sections={sections}
       />
     </>
   );

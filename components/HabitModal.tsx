@@ -3,13 +3,15 @@
 import { useState, useEffect } from 'react';
 
 type HabitModalProps = {
-  isOpen: boolean;
-  mode: 'add' | 'edit';
-  initialName?: string;
-  initialColor?: string;
-  onClose: () => void;
-  onSave: (name: string, color: string) => void;
-  onDelete?: () => void;
+  readonly isOpen: boolean;
+  readonly mode: 'add' | 'edit';
+  readonly initialName?: string;
+  readonly initialColor?: string;
+  readonly initialSectionId?: string;
+  readonly sections?: Section[];
+  readonly onClose: () => void;
+  readonly onSave: (name: string, color: string, sectionId?: string) => void;
+  readonly onDelete?: () => void;
 };
 
 const COLORS = ['#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899', '#06B6D4', '#6366F1'];
@@ -19,21 +21,25 @@ export default function HabitModal({
   mode,
   initialName = '',
   initialColor = '#3B82F6',
+  initialSectionId,
+  sections = [],
   onClose,
   onSave,
   onDelete,
 }: HabitModalProps) {
   const [title, setTitle] = useState(initialName);
   const [selectedColor, setSelectedColor] = useState(initialColor);
+  const [selectedSectionId, setSelectedSectionId] = useState(initialSectionId || undefined);
 
   useEffect(() => {
     setTitle(initialName);
     setSelectedColor(initialColor);
-  }, [initialName, initialColor, isOpen]);
+    setSelectedSectionId(initialSectionId || undefined);
+  }, [initialName, initialColor, initialSectionId, isOpen]);
 
   const handleSave = () => {
     if (!title.trim()) return;
-    onSave(title.trim(), selectedColor);
+    onSave(title.trim(), selectedColor, selectedSectionId);
   };
 
   const handleDeleteClick = () => {
@@ -121,6 +127,32 @@ export default function HabitModal({
             ))}
           </div>
         </div>
+
+        {/* Section Selection */}
+        {sections.length > 0 && (
+          <div style={{ marginBottom: '24px' }}>
+            <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>Section</label>
+            <select
+              value={selectedSectionId || ''}
+              onChange={(e) => setSelectedSectionId(e.target.value || undefined)}
+              style={{
+                width: '100%',
+                padding: '8px',
+                border: '1px solid #E5E7EB',
+                borderRadius: '4px',
+                fontSize: '14px',
+                boxSizing: 'border-box',
+              }}
+            >
+              <option value=''>No Section</option>
+              {sections.map((section) => (
+                <option key={section.id} value={section.id}>
+                  {section.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
         {/* Buttons */}
         <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>

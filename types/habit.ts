@@ -5,6 +5,7 @@ type Habit = {
   createdAt: string;
   order: number;
   color?: string;
+  sectionId?: string;
 };
 
 type HabitLog = {
@@ -13,4 +14,11 @@ type HabitLog = {
   user_id: string;
   date: string;
   value: boolean | number;
+};
+
+type Section = {
+  id: string;
+  name: string;
+  order: number;
+  user_id: string;
 };

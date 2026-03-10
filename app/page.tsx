@@ -1,25 +1,30 @@
 'use client';
 
+import { useState } from 'react';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import HabitInput from '@/components/HabitInput';
-import HabitList from '@/components/HabitList';
+import SectionView from '@/components/SectionView';
+import SectionManager from '@/components/SectionManager';
 
 const USER_ID = 'user-1';
 
 export default function Home() {
   const [habits, setHabits] = useLocalStorage<Habit[]>('habits', []);
   const [logs, setLogs] = useLocalStorage<HabitLog[]>('habit_logs', []);
+  const [sections, setSections] = useLocalStorage<Section[]>('sections', []);
+  const [isSectionManagerOpen, setIsSectionManagerOpen] = useState(false);
 
   const today = new Date().toISOString().split('T')[0];
 
-  const addHabit = (name: string, color: string = '#3B82F6') => {
+  const addHabit = (name: string, color: string = '#3B82F6', sectionId?: string) => {
     const newHabit: Habit = {
       id: crypto.randomUUID(),
       name,
       color,
       user_id: USER_ID,
       createdAt: new Date().toISOString(),
-      order: habits.length, // New habit goes to the end of the list
+      order: habits.filter((h) => !h.sectionId).length,
+      sectionId: sectionId || undefined, // Add to specified section or "No Section" by default
     };
 
     setHabits([...habits, newHabit]);
@@ -52,33 +57,105 @@ export default function Home() {
     setHabits(newOrder);
   };
 
-  const renameHabit = (habitId: string, newName: string, newColor?: string) => {
+  const renameHabit = (habitId: string, newName: string, newColor?: string, newSectionId?: string) => {
     setHabits(
       habits.map((habit) =>
-        habit.id === habitId ? { ...habit, name: newName, color: newColor || habit.color } : habit
-      )
+        habit.id === habitId
+          ? {
+              ...habit,
+              name: newName,
+              color: newColor || habit.color,
+              sectionId: newSectionId !== undefined ? newSectionId : habit.sectionId,
+            }
+          : habit,
+      ),
     );
+  };
+
+  const moveHabitToSection = (habitId: string, sectionId: string | undefined) => {
+    setHabits(habits.map((habit) => (habit.id === habitId ? { ...habit, sectionId } : habit)));
+  };
+
+  const addSection = (name: string) => {
+    const newSection: Section = {
+      id: crypto.randomUUID(),
+      name,
+      order: sections.length,
+      user_id: USER_ID,
+    };
+    setSections([...sections, newSection]);
+  };
+
+  const saveSections = (updatedSections: Section[]) => {
+    // Find deleted sections
+    const deletedSectionIds = sections
+      .filter((s) => s.name !== 'No Section')
+      .map((s) => s.id)
+      .filter((id) => !updatedSections.find((s) => s.id === id));
+
+    // Move habits from deleted sections to "No Section"
+    if (deletedSectionIds.length > 0) {
+      setHabits(
+        habits.map((habit) =>
+          deletedSectionIds.includes(habit.sectionId as string) ? { ...habit, sectionId: undefined } : habit,
+        ),
+      );
+    }
+
+    // Ensure "No Section" is always first
+    const noSectionIndex = updatedSections.findIndex((s) => s.name === 'No Section');
+    if (noSectionIndex > 0) {
+      const noSection = updatedSections[noSectionIndex];
+      const otherSections = updatedSections.filter((s) => s.name !== 'No Section');
+      setSections([{ ...noSection, order: 0 }, ...otherSections]);
+    } else {
+      setSections(updatedSections);
+    }
   };
 
   const isCompleted = (habitId: string) => {
     return logs.some(
-      (log) => log.habit_id === habitId && log.user_id === USER_ID && log.date === today && log.value === true
+      (log) => log.habit_id === habitId && log.user_id === USER_ID && log.date === today && log.value === true,
     );
   };
 
   return (
     <main style={{ padding: '2rem', maxWidth: 600, margin: '0 auto' }}>
-      <h1 style={{ textAlign: 'center', marginBottom: '1rem', fontSize: '1.3rem' }}>Taze Tracker</h1>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+        <h1 style={{ textAlign: 'center', flex: 1, marginBottom: 0, fontSize: '1.3rem' }}>Taze Tracker</h1>
+        <button
+          onClick={() => setIsSectionManagerOpen(true)}
+          style={{
+            padding: '8px 12px',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontSize: '1.2rem',
+          }}
+          title='Manage sections'
+        >
+          ⚙️
+        </button>
+      </div>
 
-      <HabitInput onAdd={addHabit} />
+      <HabitInput onAdd={addHabit} sections={sections} />
 
-      <HabitList
+      <SectionView
         habits={habits}
+        sections={sections}
         isCompleted={isCompleted}
         onToggle={toggleHabit}
         onDelete={deleteHabit}
         onReorder={reorderHabits}
         onRename={renameHabit}
+        onMoveToSection={moveHabitToSection}
+      />
+
+      <SectionManager
+        isOpen={isSectionManagerOpen}
+        sections={sections}
+        onClose={() => setIsSectionManagerOpen(false)}
+        onSave={saveSections}
+        onAddSection={addSection}
       />
     </main>
   );
