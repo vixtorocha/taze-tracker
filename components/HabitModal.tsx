@@ -59,6 +59,7 @@ export default function HabitModal({
         right: 0,
         bottom: 0,
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        backdropFilter: 'blur(4px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -68,12 +69,13 @@ export default function HabitModal({
     >
       <div
         style={{
-          backgroundColor: 'white',
+          backgroundColor: 'var(--background)',
           borderRadius: '8px',
           padding: '32px',
           boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
           maxWidth: '400px',
           width: '90%',
+          color: 'var(--foreground)',
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -92,10 +94,12 @@ export default function HabitModal({
             style={{
               width: '100%',
               padding: '8px',
-              border: '1px solid #E5E7EB',
+              border: '1px solid var(--border)',
               borderRadius: '4px',
               fontSize: '14px',
               boxSizing: 'border-box',
+              backgroundColor: 'var(--input-bg)',
+              color: 'var(--foreground)',
             }}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
@@ -118,7 +122,7 @@ export default function HabitModal({
                   height: '40px',
                   borderRadius: '6px',
                   backgroundColor: color,
-                  border: selectedColor === color ? '3px solid #000' : '2px solid #D1D5DB',
+                  border: selectedColor === color ? '3px solid var(--foreground)' : '2px solid var(--border)',
                   cursor: 'pointer',
                   transition: 'all 0.2s',
                 }}
@@ -138,10 +142,12 @@ export default function HabitModal({
               style={{
                 width: '100%',
                 padding: '8px',
-                border: '1px solid #E5E7EB',
+                border: '1px solid var(--border)',
                 borderRadius: '4px',
                 fontSize: '14px',
                 boxSizing: 'border-box',
+                backgroundColor: 'var(--input-bg)',
+                color: 'var(--foreground)',
               }}
             >
               <option value=''>No Section</option>
@@ -178,8 +184,8 @@ export default function HabitModal({
             onClick={onClose}
             style={{
               padding: '8px 16px',
-              backgroundColor: '#E5E7EB',
-              color: '#1F2937',
+              backgroundColor: 'var(--button-secondary)',
+              color: 'var(--button-secondary-text)',
               border: 'none',
               borderRadius: '4px',
               cursor: 'pointer',

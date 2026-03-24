@@ -129,7 +129,7 @@ export default function Home() {
   };
 
   return (
-    <main style={{ padding: '2rem', maxWidth: 600, margin: '0 auto' }}>
+    <main className='p-0.5 pt-5 max-w-160 my-0 mx-auto'>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
         <h1 style={{ textAlign: 'center', flex: 1, marginBottom: 0, fontSize: '1.3rem' }}>Taze Tracker</h1>
         <button

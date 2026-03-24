@@ -25,7 +25,8 @@ function SectionItem({ id, name, onDelete }: { id: string; name: string; onDelet
     gap: '12px',
     padding: '12px',
     borderRadius: '6px',
-    backgroundColor: '#f3f4f6',
+    backgroundColor: 'var(--input-bg)',
+    border: '1px solid var(--border)',
     touchAction: 'none',
   };
 
@@ -112,6 +113,7 @@ export default function SectionManager({ isOpen, sections, onClose, onSave, onAd
         right: 0,
         bottom: 0,
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        backdropFilter: 'blur(4px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -121,7 +123,7 @@ export default function SectionManager({ isOpen, sections, onClose, onSave, onAd
     >
       <div
         style={{
-          backgroundColor: 'white',
+          backgroundColor: 'var(--background)',
           borderRadius: '8px',
           padding: '24px',
           maxWidth: '500px',
@@ -129,13 +131,16 @@ export default function SectionManager({ isOpen, sections, onClose, onSave, onAd
           maxHeight: '80vh',
           overflow: 'auto',
           boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+          color: 'var(--foreground)',
         }}
         onClick={(e) => e.stopPropagation()}
       >
         <h2 style={{ marginTop: 0, marginBottom: '16px' }}>Manage Sections</h2>
 
         <div style={{ marginBottom: '20px' }}>
-          <h3 style={{ marginBottom: '12px', fontSize: '0.95rem', color: '#666' }}>Add New Section</h3>
+          <h3 style={{ marginBottom: '12px', fontSize: '0.95rem', color: 'var(--foreground)', opacity: 0.7 }}>
+            Add New Section
+          </h3>
           <div style={{ display: 'flex', gap: '8px' }}>
             <input
               type='text'
@@ -146,9 +151,11 @@ export default function SectionManager({ isOpen, sections, onClose, onSave, onAd
               style={{
                 flex: 1,
                 padding: '8px 12px',
-                border: '1px solid #ddd',
+                border: '1px solid var(--border)',
                 borderRadius: '4px',
                 fontSize: '1rem',
+                backgroundColor: 'var(--input-bg)',
+                color: 'var(--foreground)',
               }}
             />
             <button
@@ -167,7 +174,9 @@ export default function SectionManager({ isOpen, sections, onClose, onSave, onAd
           </div>
         </div>
 
-        <h3 style={{ marginBottom: '12px', fontSize: '0.95rem', color: '#666' }}>Reorder & Delete Sections</h3>
+        <h3 style={{ marginBottom: '12px', fontSize: '0.95rem', color: 'var(--foreground)', opacity: 0.7 }}>
+          Reorder & Delete Sections
+        </h3>
         <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
           <SortableContext items={localSections} strategy={verticalListSortingStrategy}>
             <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 20px 0' }}>
@@ -185,7 +194,8 @@ export default function SectionManager({ isOpen, sections, onClose, onSave, onAd
             onClick={onClose}
             style={{
               padding: '8px 16px',
-              backgroundColor: '#e5e7eb',
+              backgroundColor: 'var(--button-secondary)',
+              color: 'var(--button-secondary-text)',
               border: 'none',
               borderRadius: '4px',
               cursor: 'pointer',
