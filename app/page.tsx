@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import HabitInput from '@/components/HabitInput';
 import SectionView from '@/components/SectionView';
@@ -27,7 +28,7 @@ export default function Home() {
 
   const addHabit = (name: string, color: string = '#3B82F6', sectionId?: string) => {
     const newHabit: Habit = {
-      id: crypto.randomUUID(),
+      id: uuidv4(),
       name,
       color,
       user_id: USER_ID,
@@ -46,7 +47,7 @@ export default function Home() {
       setLogs(logs.map((log) => (log.id === existingLog.id ? { ...log, value: !log.value } : log)));
     } else {
       const newLog: HabitLog = {
-        id: crypto.randomUUID(),
+        id: uuidv4(),
         habit_id: habitId,
         user_id: USER_ID,
         date: today,
@@ -87,7 +88,7 @@ export default function Home() {
 
   const addSection = (name: string) => {
     const newSection: Section = {
-      id: crypto.randomUUID(),
+      id: uuidv4(),
       name,
       order: sections.length,
       user_id: USER_ID,
@@ -129,7 +130,7 @@ export default function Home() {
   };
 
   return (
-    <main className='p-0.5 pt-5 max-w-160 my-0 mx-auto'>
+    <main className='p-0.5 pt-5 pb-20 max-w-160 my-0 mx-auto'>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
         <h1 style={{ textAlign: 'center', flex: 1, marginBottom: 0, fontSize: '1.3rem' }}>Taze Tracker</h1>
         <button

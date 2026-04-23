@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useSortable } from '@dnd-kit/sortable';
@@ -69,7 +70,7 @@ export default function SectionManager({ isOpen, sections, onClose, onSave, onAd
 
       // Optimistically add to local state
       const newSection: Section = {
-        id: crypto.randomUUID(),
+        id: uuidv4(),
         name: newSectionName.trim(),
         order: localSections.length,
         user_id: 'user-1',
