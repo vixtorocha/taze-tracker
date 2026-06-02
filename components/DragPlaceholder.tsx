@@ -24,10 +24,10 @@ export default function DragPlaceholder({
           height: '40px',
           display: 'flex',
           alignItems: 'center',
-          backgroundColor: '#f3f4f6',
+          backgroundColor: 'var(--button-secondary)',
           borderRadius: '6px',
           margin: '8px 0',
-          border: '2px dashed #d1d5db',
+          border: '2px dashed var(--border)',
           gap: '12px',
           padding: '8px',
         }}
@@ -41,7 +41,7 @@ export default function DragPlaceholder({
 
   // Dragging placeholder (used when dragging within sections)
   return (
-    <li style={{ ...style, opacity: 0.5, backgroundColor: '#e5e7eb', cursor: 'grabbing' }}>
+    <li style={{ ...style, opacity: 0.5, backgroundColor: 'var(--button-secondary)', cursor: 'grabbing' }}>
       <CustomCheckbox checked={completed} color={color} />
       <span className={`flex-1 ${completed ? 'line-through text-gray-400' : ''}`}>{name}</span>
       <span style={{ cursor: 'grab', padding: '4px' }}>::</span>

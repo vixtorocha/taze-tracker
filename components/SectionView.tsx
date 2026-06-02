@@ -203,7 +203,8 @@ export default function SectionView({
                       alignItems: 'center',
                       gap: '12px',
                       padding: '8px 12px',
-                      backgroundColor: 'white',
+                      backgroundColor: 'var(--input-bg)',
+                      color: 'var(--foreground)',
                       borderRadius: '4px',
                       cursor: 'grabbing',
                       boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
@@ -277,9 +278,8 @@ function Section({
         marginBottom: '.5rem',
         padding: '12px',
         minHeight: '60px',
-        backgroundColor: isSectionOver && activeId ? '#f8f8f8' : 'transparent',
+        backgroundColor: isSectionOver && activeId ? 'var(--input-bg)' : 'transparent',
         borderRadius: '4px',
-        border: isSectionOver && activeId ? '2px dashed #3b82f6' : '2px dashed transparent',
         transition: 'all 0.15s ease-in-out',
       }}
     >

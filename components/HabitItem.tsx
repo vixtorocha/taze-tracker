@@ -43,7 +43,7 @@ export default function HabitItem({
     gap: '12px',
     padding: '8px',
     borderRadius: '6px',
-    touchAction: 'none',
+    touchAction: 'pan-y',
   };
 
   const handleEditSave = (newName: string, newColor: string, newSectionId?: string) => {
@@ -72,7 +72,7 @@ export default function HabitItem({
           >
             {name}
           </span>
-          <span {...attributes} {...listeners} style={{ cursor: 'grab', padding: '4px' }}>
+          <span {...attributes} {...listeners} style={{ cursor: 'grab', padding: '4px', touchAction: 'none' }}>
             ::
           </span>
         </li>

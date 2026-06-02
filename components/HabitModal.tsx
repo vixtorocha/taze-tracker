@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 type HabitModalProps = {
   readonly isOpen: boolean;
@@ -30,12 +30,6 @@ export default function HabitModal({
   const [title, setTitle] = useState(initialName);
   const [selectedColor, setSelectedColor] = useState(initialColor);
   const [selectedSectionId, setSelectedSectionId] = useState(initialSectionId || undefined);
-
-  useEffect(() => {
-    setTitle(initialName);
-    setSelectedColor(initialColor);
-    setSelectedSectionId(initialSectionId || undefined);
-  }, [initialName, initialColor, initialSectionId, isOpen]);
 
   const handleSave = () => {
     if (!title.trim()) return;
@@ -96,7 +90,7 @@ export default function HabitModal({
               padding: '8px',
               border: '1px solid var(--border)',
               borderRadius: '4px',
-              fontSize: '14px',
+              fontSize: '16px',
               boxSizing: 'border-box',
               backgroundColor: 'var(--input-bg)',
               color: 'var(--foreground)',
@@ -144,7 +138,7 @@ export default function HabitModal({
                 padding: '8px',
                 border: '1px solid var(--border)',
                 borderRadius: '4px',
-                fontSize: '14px',
+                fontSize: '16px',
                 boxSizing: 'border-box',
                 backgroundColor: 'var(--input-bg)',
                 color: 'var(--foreground)',
@@ -172,7 +166,7 @@ export default function HabitModal({
                 border: 'none',
                 borderRadius: '4px',
                 cursor: 'pointer',
-                fontSize: '14px',
+                fontSize: '16px',
                 fontWeight: '500',
                 marginRight: 'auto',
               }}
@@ -189,7 +183,7 @@ export default function HabitModal({
               border: 'none',
               borderRadius: '4px',
               cursor: 'pointer',
-              fontSize: '14px',
+              fontSize: '16px',
               fontWeight: '500',
             }}
           >
@@ -204,7 +198,7 @@ export default function HabitModal({
               border: 'none',
               borderRadius: '4px',
               cursor: 'pointer',
-              fontSize: '14px',
+              fontSize: '16px',
               fontWeight: '500',
             }}
           >

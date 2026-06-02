@@ -28,7 +28,7 @@ function SectionItem({ id, name, onDelete }: { id: string; name: string; onDelet
     borderRadius: '6px',
     backgroundColor: 'var(--input-bg)',
     border: '1px solid var(--border)',
-    touchAction: 'none',
+    touchAction: 'pan-y',
   };
 
   return (
