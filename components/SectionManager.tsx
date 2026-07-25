@@ -28,7 +28,8 @@ function SectionItem({ id, name, onDelete }: { id: string; name: string; onDelet
     borderRadius: '6px',
     backgroundColor: 'var(--input-bg)',
     border: '1px solid var(--border)',
-    touchAction: 'pan-y',
+    touchAction: 'none',
+    userSelect: 'none',
   };
 
   return (
@@ -62,7 +63,13 @@ function SectionItem({ id, name, onDelete }: { id: string; name: string; onDelet
 export default function SectionManager({ isOpen, sections, onClose, onSave, onAddSection }: Props) {
   const [newSectionName, setNewSectionName] = useState('');
   const [localSections, setLocalSections] = useState(sections);
-  const sensors = useSensors(useSensor(PointerSensor));
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+  );
 
   const handleAddSection = () => {
     if (newSectionName.trim()) {
@@ -131,6 +138,7 @@ export default function SectionManager({ isOpen, sections, onClose, onSave, onAd
           width: '90%',
           maxHeight: '80vh',
           overflow: 'auto',
+          overscrollBehavior: 'contain',
           boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
           color: 'var(--foreground)',
         }}

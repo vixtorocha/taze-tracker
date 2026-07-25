@@ -283,10 +283,10 @@ function Section({
         transition: 'all 0.15s ease-in-out',
       }}
     >
-      <h3 style={{ margin: '0 0 5px 0', fontSize: '0.95rem', color: '#919397', fontWeight: '600' }}>
-        {sectionName}
-        {habits.length > 0 && <span style={{ marginLeft: '8px', color: '#919397' }}>({habits.length})</span>}
-      </h3>
+      <div className='flex items-center mb-0 font-semibold text-gray-400' style={{ gap: '8px' }}>
+        <h3>{sectionName}</h3>
+        {habits.length > 0 && <p className='text-sm mb-0.5 text-gray-500'>({habits.length})</p>}
+      </div>
 
       <SortableContext items={habits} strategy={verticalListSortingStrategy}>
         <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
